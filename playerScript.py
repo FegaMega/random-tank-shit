@@ -16,12 +16,8 @@ class Rectangle:
         self.rotCenter()
         self.getOffset()
     def rotCenter(self):
-        size = self.rect.size
         self.img = pygame.transform.rotate(self.orgimg, self.angle).convert_alpha()
-        Topleft = [size[0]/2 - (self.img.get_width()/2),  #X
-                    size[1]/2 - (self.img.get_height()/2)] #Y
-        self.rect = self.img.get_rect(topleft = Topleft)
-        return self.rect, self.img
+        return self.img
     def getOffset(self):
         self.offset = [(math.cos(math.radians(self.angle))*self.offsetDistance), -(math.sin(math.radians(self.angle))*self.offsetDistance)]
         return self.offset
@@ -80,7 +76,7 @@ class Player:
         if pos != None:
             self.pos = pos
     
-    def getVal(self, speed=None, x=None, y=None, angle=None, pos=None, size=None):
+    def getVal(self, speed=None, x=None, y=None, angle=None, pos=None, size=None, Midpos=None):
         #Can only give ONE variable
         if angle != None:
             return self.angle
@@ -92,6 +88,8 @@ class Player:
             return self.pos[1]
         if pos != None:
             return [self.pos[0]-self.Base.img.get_width()/2, self.pos[1]-self.Base.img.get_height()/2]
+        if Midpos != None:
+            return self.pos
         if size != None:
             return [self.Base.img.get_width(), self.Base.img.get_height()]
     
@@ -99,7 +97,8 @@ class Player:
     def update(self, deltaTime):
         
         self.angle += round(self.changeangle * deltaTime)
-        
+        self.angle = self.angle%360
+
         self.Base.update(self.angle)
         self.Turret.update(self.angle)
         self.Canon.update(self.angle)
@@ -109,7 +108,9 @@ class Player:
 
         for Bullet in self.bullets:
             Bullet.update(deltaTime)
-
+        if len(self.bullets) > 0:
+            if self.bullets[0].age > 500:
+                del self.bullets[0]
     def draw(self, screen): 
 
         self.Base.draw(screen, self.pos)
@@ -123,7 +124,7 @@ class Player:
         pos = [0, 0]
         pos[0] = self.pos[0] + self.Canon.offset[0] + math.cos(math.radians(self.angle)) * (5*self.scale)
         pos[1] = self.pos[1] + self.Canon.offset[1] - math.sin(math.radians(self.angle)) * (5*self.scale)
-        self.bullets.append(bullet(pos, self.angle, .13, self, self.scale))
+        self.bullets.append(bullet(pos, self.angle, .5, self, self.scale))
         
 
 
@@ -137,14 +138,16 @@ class bullet:
         self.scale = scale
         self.angle = angle
         self.speed = speed
-        self.size = [5*self.scale, 5*self.scale]
+        self.size = [10*self.scale, 5*self.scale]
         self.orgimg = pygame.surface.Surface(self.size).convert_alpha()
         self.orgimg.fill((0, 0, 0, 255))
         
         self.img = pygame.transform.rotate(self.orgimg, self.angle).convert_alpha()
         self.owner = owner
     def draw(self, screen):
-        screen.blit(self.img, self.pos)
+        
+        img = pygame.transform.flip(self.img, self.flipped[0], self.flipped[1])
+        screen.blit(img, self.pos)
     def update(self, deltaTime):
         self.flippedTime[0] -= 1
         self.flippedTime[1] -= 1
