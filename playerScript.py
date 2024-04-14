@@ -109,6 +109,10 @@ class Player:
         for Bullet in self.bullets:
             Bullet.update(deltaTime)
         if len(self.bullets) > 0:
+<<<<<<< Updated upstream
+=======
+            #500 frames is about 8 sec
+>>>>>>> Stashed changes
             if self.bullets[0].age > 500:
                 del self.bullets[0]
     def draw(self, screen): 
