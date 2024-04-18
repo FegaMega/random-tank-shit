@@ -4,17 +4,17 @@ import JH, pygame
 class Map:
     def __init__(self, scale):
         
-
-        wall_NS = pygame.Surface((5, 25))
+        wallSize = [25, 5]
+        wall_NS = pygame.Surface((wallSize[1], wallSize[0]))
         wall_NS.fill((0, 0, 0))
 
 
-        wall_WE = pygame.Surface((25, 5))
+        wall_WE = pygame.Surface(wallSize)
         wall_WE.fill((0, 0, 0))
 
         
 
-        wall_NS_WE = pygame.Surface((25, 25)).convert_alpha()
+        wall_NS_WE = pygame.Surface((wallSize[0], wallSize[0])).convert_alpha()
         wall_NS_WE.fill((0, 0, 0, 0))
         wall_NS_WE.blit(wall_WE, (0, 0))
         wall_NS_WE.blit(wall_NS, (0, 0))
@@ -31,7 +31,8 @@ class Map:
     def loadMap(self, name="Map 1"):
         self.mapName = name
         self.map = self.Json[self.mapName] 
-        self.LoadedMap: pygame.Surface = pygame.Surface((29*25*self.scale, 29*25*self.scale)).convert_alpha()
+        chunkSize = 25
+        self.LoadedMap: pygame.Surface = pygame.Surface((len(self.map)*chunkSize*self.scale, len(self.map[0])*chunkSize*self.scale)).convert_alpha()
         self.LoadedMap.fill((0, 0, 0, 0))
         Yint = 0
         for y in self.map:
@@ -41,11 +42,11 @@ class Map:
                     Xint+=1
                     continue
                 if x == 1:
-                    self.LoadedMap.blit(self.wallsSurfs["wall_NS"], (Xint*25*self.scale, Yint*25*self.scale))
+                    self.LoadedMap.blit(self.wallsSurfs["wall_NS"], (Xint*chunkSize*self.scale, Yint*chunkSize*self.scale))
                 if x == 2:
-                    self.LoadedMap.blit(self.wallsSurfs["wall_WE"], (Xint*25*self.scale, Yint*25*self.scale))
+                    self.LoadedMap.blit(self.wallsSurfs["wall_WE"], (Xint*chunkSize*self.scale, Yint*chunkSize*self.scale))
                 if x == 3:
-                    self.LoadedMap.blit(self.wallsSurfs["wall_NS-WE"], (Xint*25*self.scale, Yint*25*self.scale))
+                    self.LoadedMap.blit(self.wallsSurfs["wall_NS-WE"], (Xint*chunkSize*self.scale, Yint*chunkSize*self.scale))
                 Xint += 1
             Yint += 1
         return self.LoadedMap

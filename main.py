@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, random
 from pygame.locals import *
 import playerScript
 import setup
@@ -28,9 +28,9 @@ class gameClass:
         else:
             self.player.updateVal(speed=0)
         if keys[K_a] == True:
-            self.player.updateVal(angle=.125)
+            self.player.updateVal(angle=.200)
         elif keys[K_d] == True:
-            self.player.updateVal(angle=-.125)
+            self.player.updateVal(angle=-.200)
         else:
             self.player.updateVal(angle=0)
         
@@ -41,9 +41,9 @@ class gameClass:
         else:
             self.player2.updateVal(speed=0)
         if keys[K_LEFT] == True:
-            self.player2.updateVal(angle=.125)
+            self.player2.updateVal(angle=.200)
         elif keys[K_RIGHT] == True:
-            self.player2.updateVal(angle=-.125)
+            self.player2.updateVal(angle=-.200)
         else:
             self.player2.updateVal(angle=0) 
         for event in pygame.event.get(KEYDOWN):
@@ -58,6 +58,8 @@ class gameClass:
     def mapPlayerCollision(self, player):
         playerPos = player.getVal(pos=1)
         playerSize = player.getVal(size=1)
+        blockSize = 25
+        blockSize2 = 5
         for y in range(round(round(playerPos[1]-25)/25), 
                        round(round(playerPos[1]+playerSize[1]+25)/25)):
             if y < 0:
@@ -75,90 +77,90 @@ class gameClass:
                     continue
 
                 if self.MapObj.map[y][x] == 1:
-                    if True == rectCollision(x*25, y*25, 5, 25, 
+                    if True == rectCollision(x*blockSize, y*blockSize, blockSize2, blockSize, 
                                              playerPos[0], playerPos[1], 
                                              playerSize[0], playerSize[1]):
                         midpos = player.getVal(Midpos=1)
-                        if midpos[0] < x*25:
+                        if midpos[0] < x*blockSize:
                             if player.angle < 90 or player.angle > 270 or player.speed < 0:
                                 player.speed = 0
                         
-                        elif midpos[0] > x*25 + 5:
+                        elif midpos[0] > x*blockSize + blockSize2:
                             if player.angle > 90 and player.angle < 270 or player.speed < 0:
                                 player.speed = 0
                         if y+1 != len(self.MapObj.map):
                             if self.MapObj.map[y+1][x] != 1 and self.MapObj.map[y+1][x] != 2 and self.MapObj.map[y+1][x] != 3:
-                                if midpos[1] > y*25 + 25:
+                                if midpos[1] > y*blockSize + blockSize:
                                     if player.angle < 180 or player.speed < 0:
                                         player.speed = 0
                         if y-1 != -1:
                             if self.MapObj.map[y-1][x] != 1 and self.MapObj.map[y-1][x] != 3:
-                                if midpos[1] < y*25:
+                                if midpos[1] < y*blockSize:
                                     if player.angle > 180 or player.speed < 0:
                                         player.speed = 0
 
 
                 if self.MapObj.map[y][x] == 2:
-                    if True == rectCollision(x*25, y*25, 25, 5, 
+                    if True == rectCollision(x*blockSize, y*blockSize, blockSize, blockSize2, 
                                              playerPos[0], playerPos[1], 
                                              playerSize[0], playerSize[1]):
                         midpos = player.getVal(Midpos=1)
-                        if midpos[1] < y*25:
+                        if midpos[1] < y*blockSize:
                             if player.angle > 180 or player.speed < 0:
                                 player.speed = 0
-                        elif midpos[1] > y*25 + 25:
+                        elif midpos[1] > y*blockSize + blockSize:
                             if player.angle < 180 or player.speed < 0:
                                 player.speed = 0
                         if x+1 != len(self.MapObj.map[y]):
                             if self.MapObj.map[y][x+1] != 1 and self.MapObj.map[y][x+1] != 2 and self.MapObj.map[y][x+1] != 3:
-                                if midpos[0] > x*25+5:
+                                if midpos[0] > x*blockSize+blockSize2:
                                     if player.angle > 90 and player.angle < 270 or player.speed < 0:
                                         player.speed = 0
-                        if x-1 != -1:
+                        if x+1 != len(self.MapObj[y]):
                             if self.MapObj.map[y][x+1] != 2 and self.MapObj.map[y][x+1] != 3:
-                                if midpos[0] < x*25:
+                                if midpos[0] < x*blockSize:
                                     if player.angle < 90 or player.angle > 270 or player.speed < 0:
                                         player.speed = 0
                 if self.MapObj.map[y][x] == 3:
-                    if True == rectCollision(x*25, y*25, 25, 5, 
+                    if True == rectCollision(x*blockSize, y*blockSize, blockSize, blockSize2, 
                                              playerPos[0], playerPos[1], 
                                              playerSize[0], playerSize[1]):
                         midpos = player.getVal(Midpos=1)
-                        if midpos[1] < y*25:
+                        if midpos[1] < y*blockSize:
                             if player.angle > 180 or player.speed < 0:
                                 player.speed = 0
-                        elif midpos[1] > y*25:
+                        elif midpos[1] > y*blockSize+blockSize2:
                             if player.angle < 180 or player.speed < 0:
                                 player.speed = 0
                         if x+1 != len(self.MapObj.map[y]):
                             if self.MapObj.map[y][x+1] != 1 and self.MapObj.map[y][x+1] != 2 and self.MapObj.map[y][x+1] != 3:
-                                if midpos[0] > x*25+5:
+                                if midpos[0] > x*blockSize+blockSize:
                                     if player.angle > 90 and player.angle < 270 or player.speed < 0:
                                         player.speed = 0
                         if x-1 != -1:
                             if self.MapObj.map[y][x+1] != 2 and self.MapObj.map[y][x+1] != 3:
-                                if midpos[0] < x*25:
+                                if midpos[0] < x*blockSize:
                                     if player.angle < 90 or player.angle > 270 or player.speed < 0:
                                         player.speed = 0
-                    if True == rectCollision(x*25, y*25, 5, 25, 
+                    if True == rectCollision(x*25, y*25, blockSize2, blockSize, 
                                              playerPos[0], playerPos[1], 
                                              playerSize[0], playerSize[1]):
                         midpos = player.getVal(Midpos=1)
-                        if midpos[0] < x*25:
+                        if midpos[0] < x*blockSize:
                             if player.angle < 90 or player.angle > 270 or player.speed < 0:
                                 player.speed = 0
                         
-                        elif midpos[0] > x*25:
+                        elif midpos[0] > x*blockSize+blockSize2:
                             if player.angle > 90 and player.angle < 270 or player.speed < 0:
                                 player.speed = 0
                         if y+1 != len(self.MapObj.map):
                             if self.MapObj.map[y+1][x] != 1 and self.MapObj.map[y+1][x] != 2 and self.MapObj.map[y+1][x] != 3:
-                                if midpos[1] > y*25 + 25:
+                                if midpos[1] > y*blockSize + blockSize:
                                     if player.angle < 180 or player.speed < 0:
                                         player.speed = 0
                         if y-1 != -1:
                             if self.MapObj.map[y-1][x] != 1 and self.MapObj.map[y-1][x] != 3:
-                                if midpos[1] < y*25:
+                                if midpos[1] < y*blockSize:
                                     if player.angle > 180 or player.speed < 0:
                                         player.speed = 0
     def mapBulletCollision(self, bullets):
@@ -358,13 +360,14 @@ class gameClass:
                                 bullet.flipped[1] = not bullet.flipped[1]
                             bullet.flippedTime[1] = bulletwaitTime
 
-    def bulletCollision(self, bullets, player):
+    def bulletCollision(self, bullets:list, player):
         playerPos = player.getVal(pos=1)
         playerSize = player.getVal(size=1)
         for bullet in bullets:
             if True == rectCollision(bullet.pos[0], bullet.pos[1], bullet.size[0], bullet.size[1],
                             playerPos[0], playerPos[1], playerSize[0], playerSize[1]) and bullet.age > 5:
-                player = playerScript.Player(300, 300, player.scale, player.one, [])
+                player = playerScript.Player(random.randint(0, self.screenSize[0]), random.randint(0, self.screenSize[1]), player.scale, player.one, [])
+                del bullets[bullets.index(bullet)]
         return player
     def update(self):
 
