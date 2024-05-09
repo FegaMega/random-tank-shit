@@ -2,6 +2,7 @@ import pygame, sys, random
 from pygame.locals import *
 import playerScript
 import setup
+import music
 def rectCollision(Ax, Ay, Awidth, Aheight, Bx, By, Bwidth, Bheight):
     return (Ax + Awidth > Bx) and (Ax < Bx + Bwidth) and (Ay + Aheight > By) and (Ay < By + Bheight)
 
@@ -17,6 +18,8 @@ class gameClass:
         self.deltaTime = 0
         self.MapObj = setup.Map(1)
         self.MapObj.loadMap()
+        self.music = music.music()
+        self.music.loopBackround()
     def handleEvent(self):
         if pygame.event.get(QUIT):
             self.r = False
@@ -404,6 +407,7 @@ class gameClass:
         pygame.display.update()
 
 def main():
+    pygame.init()
     game = gameClass()
     game.player.updateVal(x=400, y=400)
     while game.r == True:
