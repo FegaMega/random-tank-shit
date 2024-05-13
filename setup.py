@@ -18,9 +18,13 @@ class Map:
         wall_NS_WE.fill((0, 0, 0, 0))
         wall_NS_WE.blit(wall_WE, (0, 0))
         wall_NS_WE.blit(wall_NS, (0, 0))
+
+        wall_Small = pygame.Surface((wallSize[1], wallSize[1])).convert_alpha()
+        wall_Small.fill((0, 0, 0))
         self.wallsSurfs = {"wall_WE": wall_WE,
                            "wall_NS": wall_NS,
-                           "wall_NS-WE": wall_NS_WE
+                           "wall_NS-WE": wall_NS_WE,
+                           "wall_Small" : wall_Small
                                }
         self.scale = scale
         self.folder = "data/json/map.json"
@@ -47,6 +51,8 @@ class Map:
                     self.LoadedMap.blit(self.wallsSurfs["wall_WE"], (Xint*chunkSize*self.scale, Yint*chunkSize*self.scale))
                 if x == 3:
                     self.LoadedMap.blit(self.wallsSurfs["wall_NS-WE"], (Xint*chunkSize*self.scale, Yint*chunkSize*self.scale))
+                if x == 4:
+                    self.LoadedMap.blit(self.wallsSurfs["wall_Small"], (Xint*chunkSize*self.scale, Yint*chunkSize*self.scale))
                 Xint += 1
             Yint += 1
         return self.LoadedMap

@@ -53,7 +53,6 @@ class gameClass:
             #player1
             if event.key == K_SPACE:
                 self.player.shoot()
-
             #player2
             if event.key == K_RSHIFT:
                 self.player2.shoot()
@@ -119,8 +118,8 @@ class gameClass:
                                 if midpos[0] > x*blockSize+blockSize2:
                                     if player.angle > 90 and player.angle < 270 or player.speed < 0:
                                         player.speed = 0
-                        if x+1 != len(self.MapObj[y]):
-                            if self.MapObj.map[y][x+1] != 2 and self.MapObj.map[y][x+1] != 3:
+                        if x-1 != -1:
+                            if self.MapObj.map[y][x-1] != 2 and self.MapObj.map[y][x-  1] != 3:
                                 if midpos[0] < x*blockSize:
                                     if player.angle < 90 or player.angle > 270 or player.speed < 0:
                                         player.speed = 0
@@ -141,7 +140,7 @@ class gameClass:
                                     if player.angle > 90 and player.angle < 270 or player.speed < 0:
                                         player.speed = 0
                         if x-1 != -1:
-                            if self.MapObj.map[y][x+1] != 2 and self.MapObj.map[y][x+1] != 3:
+                            if self.MapObj.map[y][x-1] != 2 and self.MapObj.map[y][x-1] != 3:
                                 if midpos[0] < x*blockSize:
                                     if player.angle < 90 or player.angle > 270 or player.speed < 0:
                                         player.speed = 0
@@ -351,19 +350,24 @@ class gameClass:
                                                         bullet.getVal(size=1)[0], bullet.getVal(size=1)[1]):    
                                         bullet.flipped[0] = not bullet.flipped[0]
                                         bullet.flippedTime[0] = bulletwaitTime
+                    if self.MapObj.map[y][x] == 4:
                         
-                        #Bottom Side hit
-                        #Top Side hit
-                        if bullet.flippedTime[1] < 0:
-                            if True == rectCollision(x*25+5, y*25+3, 20, 2, 
+                        
+                        #Bottom Side hit and right side 
+                        if bullet.flippedTime[1] < 0 or bullet.flippedTime[0] < 0:
+                            if True == rectCollision(x*25, y*25, 5, 5, 
                                                 bullet.pos[0], bullet.pos[1], 
                                                 bullet.getVal(size=1)[0], bullet.getVal(size=1)[1]) or True == rectCollision(x*25, y*25, 25, 2, 
                                                 bullet.pos[0], bullet.pos[1], 
                                                 bullet.getVal(size=1)[0], bullet.getVal(size=1)[1]):
-                                bullet.flipped[1] = not bullet.flipped[1]
-                            bullet.flippedTime[1] = bulletwaitTime
+                                if bullet.flippedTime[0] < 0:
+                                    bullet.flipped[0] = not bullet.flipped[0]
+                                    bullet.flippedTime[0] = bulletwaitTime
+                                if bullet.flippedTime[1] < 0:
+                                    bullet.flipped[1] = not bullet.flipped[1]
+                                    bullet.flippedTime[1] = bulletwaitTime
 
-    def bulletCollision(self, bullets:list, player):
+    def bulletHit(self, bullets:list, player):
         playerPos = player.getVal(pos=1)
         playerSize = player.getVal(size=1)
         for bullet in bullets:
@@ -384,11 +388,11 @@ class gameClass:
         
         self.player2.update(self.deltaTime)
         
-        self.player2 = self.bulletCollision(self.player.bullets, self.player2)
-        self.player2 = self.bulletCollision(self.player2.bullets, self.player2)
+        self.player2 = self.bulletHit(self.player.bullets, self.player2)
+        self.player2 = self.bulletHit(self.player2.bullets, self.player2)
         
-        self.player = self.bulletCollision(self.player2.bullets, self.player)
-        self.player = self.bulletCollision(self.player.bullets, self.player)
+        self.player = self.bulletHit(self.player2.bullets, self.player)
+        self.player = self.bulletHit(self.player.bullets, self.player)
         
 
         return 0 

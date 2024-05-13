@@ -109,8 +109,9 @@ class Player:
         for Bullet in self.bullets:
             Bullet.update(deltaTime)
         if len(self.bullets) > 0:
-            #60 frames is about 1 sec
-            if self.bullets[0].age > 120:
+            #60 == FPS
+            #seconds * FPS to get survival in seconds
+            if self.bullets[0].age > 5 * 60:
                 del self.bullets[0]
     def draw(self, screen): 
 
@@ -121,11 +122,11 @@ class Player:
             Bullet.draw(screen)
 
     def shoot(self):
-        if len(self.bullets) < 4:
+        if len(self.bullets) < 8:
             pos = [0, 0]
-            pos[0] = self.pos[0] + self.Canon.offset[0] + math.cos(math.radians(self.angle)) * (5*self.scale)
-            pos[1] = self.pos[1] + self.Canon.offset[1] - math.sin(math.radians(self.angle)) * (5*self.scale)
-            self.bullets.append(bullet(pos, self.angle, .5, self, self.scale))
+            pos[0] = self.pos[0] + self.Canon.offset[0] + math.cos(math.radians(self.angle)) * (10*self.scale)
+            pos[1] = self.pos[1] + self.Canon.offset[1] - math.sin(math.radians(self.angle)) * (10*self.scale)
+            self.bullets.append(bullet(pos, self.angle, .25, self, self.scale))
             
 
 
