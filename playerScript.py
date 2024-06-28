@@ -100,8 +100,8 @@ class Player:
         self.angle = self.angle%360
 
         self.Base.update(self.angle)
-        self.Turret.update(self.angle)
-        self.Canon.update(self.angle)
+        self.Turret.update(self.angle+90)
+        self.Canon.update(self.angle+90)
         
         self.pos[0] += math.cos(math.radians(self.angle)) * self.speed*self.scale*deltaTime
         self.pos[1] -= math.sin(math.radians(self.angle)) * self.speed*self.scale*deltaTime
@@ -124,9 +124,9 @@ class Player:
     def shoot(self):
         if len(self.bullets) < 8:
             pos = [0, 0]
-            pos[0] = self.pos[0] + self.Canon.offset[0] + math.cos(math.radians(self.angle)) * (10*self.scale)
-            pos[1] = self.pos[1] + self.Canon.offset[1] - math.sin(math.radians(self.angle)) * (10*self.scale)
-            self.bullets.append(bullet(pos, self.angle, .25, self, self.scale))
+            pos[0] = self.pos[0] + self.Canon.offset[0] + math.cos(math.radians(self.Canon.angle)) * (10*self.scale)
+            pos[1] = self.pos[1] + self.Canon.offset[1] - math.sin(math.radians(self.Canon.angle)) * (10*self.scale)
+            self.bullets.append(bullet(pos, self.Canon.angle, .25, self, self.scale))
             
 
 
